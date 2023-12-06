@@ -1,0 +1,10 @@
+<!-- get-record.ejs -->
+<div id="result-container">
+    <% if (schema && data) { %>
+      <h3>Отображаем запись для схемы: <%= schema %></h3>
+      <p><%= JSON.stringify(data) %></p>
+    <% } else { %>
+      <p>Выберите схему и введите ID записи для отображения данных.</p>
+    <% } %>
+  </div>
+  

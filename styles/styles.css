@@ -1,0 +1,90 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  color: #000080;
+  font-size: 200%;
+  font-family: Arial, Verdana, sans-serif;
+  text-align: center;
+}
+
+p {
+  padding-left: 20px;
+}
+
+.tab {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+.tab-links {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab-link {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+#messageTypeChart {
+  max-height: 400px; /
+}
+
+#countChart {
+  max-height: 400px; 
+}
+
+#realEstateChart {
+  max-height: 400px; 
+}
+
+#CoordChart {
+  max-height: 400px; 
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #555;
+}

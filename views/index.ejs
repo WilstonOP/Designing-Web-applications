@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+  <div class="tab-links">
+    <div class="tab-link" onclick="openTab(event, 'display-tab')">Данные</div>
+    <div class="tab-link" onclick="openTab(event, 'form-tab')">Обратная связь</div>
+    <div class="tab-link" onclick="openTab(event, 'realestate-tab')">Недвижимость</div>
+    <div class="tab-link" onclick="openTab(event, 'additionaldata')">Параметры</div>
+    <div class="tab-link" onclick="openTab(event, 'chart-tab')">Графики</div>
+  </div>
+   
+  <div id="form-tab" class="tab">
+    <div class="container">
+      <h2 class="title">Обратная связь</h2>
+      <div class="form-container">
+        <form action="/feedback" method="POST">
+          <label for="name">ФИО:</label>
+          <input type="text" id="name" name="name"><br><br>
+          <label for="phone">Номер телефона:</label>
+          <input type="text" id="phone" name="phone" required><br><br>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required><br><br>
+          <label for="message">Сообщение:</label>
+          <textarea id="message" name="message" required></textarea><br><br>
+          <label for="messageType">Тип сообщения:</label>
+          <select id="messageType" name="messageType" required>
+            <option value="general">Общая консультация</option>
+            <option value="purchase">Покупка</option>
+            <option value="sale">Продажа</option>
+          </select><br><br>
+          <input type="submit" value="Отправить">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="realestate-tab" class="tab">
+    <div class="container">
+      <h2 class="title">Форма недвижимости</h2>
+      <div class="form-container">
+        <form action="/realestate" method="POST">
+          <label>Тип жилья:</label>
+          <select name="housingType">
+            <option>Квартира</option>
+            <option>Дом</option>
+            <option>Апартаменты</option>
+          </select> <br><br>
+          <label>Цена:</label>
+          <input type="number" name="price"> <br><br>
+          <label>ID:</label>
+          <input type="text" name="id"> <br><br>
+          <label>Координаты X:</label>
+          <input type="text" name="x"> <br><br>
+          <label>Координаты Y:</label>
+          <input type="text" name="y"> <br><br>
+          <button type="submit">Отправить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="additionaldata" class="tab">
+    <div class="container">
+      <h2 class="title">Форма параметров</h2>
+      <div class="form-container">
+        <form action="/additionaldata" method="POST">
+          <label>Метры квадратные:</label>
+          <input type="number" name="Метры квадратные"><br><br>
+          <label>Комнаты:</label>
+          <input type="number" name="Комнаты"><br><br>
+          <label>Цена:</label>
+          <input type="number" name="Цена"><br><br>
+          <label>ID:</label>
+          <input type="text" name="id"><br><br>
+          <button type="submit">Отправить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="display-tab" class="tab active">
+    <div class="container">
+      <h2 class="title">Отображение данных</h2>
+      <div class="form-container">
+        <form action="/display" method="POST">
+          <label for="schema">Выберите схему:</label>
+          <select id="schema" name="schema" required>
+            <option value="Feedback">Feedback</option>
+            <option value="RealEstate">RealEstate</option>
+            <option value="AdditionalData">AdditionalData</option>
+          </select><br><br>
+          <button type="submit">Показать данные</button>
+        </form>
+      </div>
+
+      <% if (schema && data) { %>
+        <h3>Данные схемы: <%= schema %></h3>
+        <ul>
+          <% data.forEach(item => { %>
+            <li>
+              <%= JSON.stringify(item) %>
+              <form action="/delete" method="POST" style="display: inline;">
+                <input type="hidden" name="schema" value="<%= schema %>">
+                <input type="hidden" name="id" value="<%= item._id %>">
+                <button type="submit">Удалить</button>
+              </form>
+              <!-- Add update form for each record -->
+              <form action="/update" method="POST" style="display: inline;">
+                <input type="hidden" name="schema" value="<%= schema %>">
+                <input type="hidden" name="id" value="<%= item._id %>"><br><br>
+                <label for="columnName">Изменяемый атрибут:</label>
+                <input type="text" id="columnName" name="columnName" required><br><br>
+                <label for="columnValue">Новое значение:</label>
+                <input type="text" id="columnValue" name="columnValue" required>
+                <button type="submit">Обновить</button> <br><br>
+              </form>
+            </li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p>Выберите схему для отображения данных.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <div id="chart-tab" class="tab">
+    <h2>Графики</h2>
+
+    <h3 id="chart-title">Количество заявок в день</h3>
+    <canvas id="countChart"></canvas>
+
+    <h3 id="message-type-chart-title">Количество заявок по типу</h3>
+    <canvas id="messageTypeChart"></canvas>
+
+    <h3 id="message-type-chart-title">Количество обьектов</h3>
+    <canvas id="realEstateChart"></canvas>
+
+    <h3 id="message-type-chart-title">Параметры дома</h3>
+    <canvas id="additionalDataChart"></canvas>
+
+    <h3 id="message-type-chart-title">Координаты обьектов</h3>
+    <canvas id="CoordChart"></canvas>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        form.submit();
+      })
+    });
+
+    function openTab(event, tabName) {
+      const tabs = document.getElementsByClassName('tab');
+      for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+      }
+      document.getElementById(tabName).classList.add('active');
+    }
+
+    fetch('/requests-per-day')
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          document.getElementById('countChart').style.display = 'none';
+          document.getElementById('chart-title').innerText = 'Нет данных для отображения';
+        } else {
+          const labels = data.map(item => item._id);
+          const values = data.map(item => item.count);
+
+          const ctx = document.getElementById('countChart').getContext('2d');
+          const myChart = new Chart(ctx, {
+            type: 'bar', // 'line'
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Количество заявок',
+                data: values,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+      });
+
+
+    fetch('/message-type-count')
+      .then(response => response.json())
+      .then(data => {
+        if (Object.keys(data).length === 0) {
+          document.getElementById('messageTypeChart').style.display = 'none';
+          document.getElementById('message-type-chart-title').innerText = 'Нет данных для отображения';
+        } else {
+          const labels = Object.keys(data);
+          const values = Object.values(data);
+
+          const ctx = document.getElementById('messageTypeChart').getContext('2d');
+          const messageTypeChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Количество заявок',
+                data: values,
+                backgroundColor: ['rgba(192, 75, 192, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(192, 192, 75, 0.2)'],
+                borderColor: ['rgba(192, 75, 192, 1)', 'rgba(75, 192, 192, 1)', 'rgba(192, 192, 75, 1)'],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+      });
+
+    fetch('/real-estate-data')
+      .then(response => response.json())
+      .then(data => {
+        const housingTypes = data.map(item => item.housingType);
+
+        const housingTypeCount = {};
+        housingTypes.forEach(type => {
+          if (!housingTypeCount[type]) {
+            housingTypeCount[type] = 0;
+          }
+          housingTypeCount[type]++;
+        });
+        const housingTypeCountArray = Object.keys(housingTypeCount).map(type => ({
+          type,
+          count: housingTypeCount[type]
+        }));
+
+        const ctx = document.getElementById('realEstateChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+          type: 'polarArea',
+          data: {
+            labels: housingTypeCountArray.map(item => item.type),
+            datasets: [{
+              label: 'Housing Type Count',
+              data: housingTypeCountArray.map(item => item.count),
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+        });
+      });
+
+
+    fetch('/coordinates')
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          document.getElementById('CoordChart').style.display = 'none';
+          document.getElementById('chart-title').innerText = 'Нет данных для отображения';
+        } else {
+          const xCoordinates = data.map(item => parseFloat(item.x));
+          const yCoordinates = data.map(item => parseFloat(item.y));
+
+          const ctx = document.getElementById('CoordChart').getContext('2d');
+          const myChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+              datasets: [{
+                label: 'Координаты',
+                data: xCoordinates.map((x, index) => ({ x, y: yCoordinates[index] })),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                x: {
+                  type: 'linear',
+                  position: 'bottom'
+                },
+                y: {
+                  type: 'linear',
+                  position: 'left'
+                }
+              }
+            }
+          });
+        }
+      });
+
+
+    fetch('/additional-data')
+      .then(response => response.json())
+      .then(data => {
+
+        const randomIndex = Math.floor(Math.random() * data.length);
+        const randomData = data[randomIndex];
+
+        const sqm = randomData.squareMeters;
+        const bedrooms = randomData.bedrooms;
+        const price = randomData.price;
+
+        const ctx = document.getElementById('additionalDataChart').getContext('2d');
+
+        new Chart(ctx, {
+          type: 'bubble',
+          data: {
+            datasets: [{
+              label: 'Данные',
+              data: [{
+                x: sqm,
+                y: bedrooms,
+                r: price
+              }]
+            }]
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+                min: 0,
+                max: 2 * sqm,
+                ticks: {
+                  stepSize: Math.ceil(sqm / 10)
+                }
+              },
+              y: {
+                type: 'linear',
+                position: 'left',
+                min: 0,
+                max: 2 * bedrooms,
+                ticks: {
+                  stepSize: 1
+                }
+              },
+              r: {
+                type: 'linear',
+                position: 'right',
+                min: 0,
+                max: 2 * price,
+                ticks: {
+                  stepSize: Math.ceil(price / 10)
+                }
+              }
+            }
+          }
+        });
+
+      });
+
+  </script>
+</body>
+</html>
