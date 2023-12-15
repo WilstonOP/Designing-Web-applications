@@ -72,8 +72,8 @@ console.log(RealEstate);
     console.error(error);
   });
 */
-  console.log(RealEstate);
-  RealEstate.find({})
+  console.log(AdditionalData);
+  AdditionalData.find({})
   .then(data => {
     console.log(data); 
   })
