@@ -38,7 +38,7 @@ const realEstateSchema = new mongoose.Schema({
 const RealEstate = mongoose.model('RealEstate', realEstateSchema);
 ```
 
-### Модель дополнительной информации (Additional)
+### Модель дополнительной информации (AdditionalData)
 ```javascript
 const AdditionalDataSchema = new mongoose.Schema({
   squareMeters: {type: Number, required: true },
