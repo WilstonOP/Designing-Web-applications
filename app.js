@@ -32,10 +32,10 @@ const realEstateSchema = new mongoose.Schema({
 });
 
 const AdditionalDataSchema = new mongoose.Schema({
-  squareMeters: {type: Number},
-  bedrooms: {type: Number}, 
-  price: {type: Number},
-  id: {type: String} 
+  squareMeters: {type: Number, required: true },
+  bedrooms: {type: Number, required: true }, 
+  price: {type: Number, required: true },
+  id: {type: String, required: true } 
 });
 
 const RealEstate = mongoose.model('RealEstate', realEstateSchema);
@@ -105,7 +105,6 @@ app.post('/feedback', (req, res) => {
 
 app.post('/realestate', (req, res) => {
   const realEstate = new RealEstate(req.body);
-
   realEstate.save()
     .then(() => {
       res.redirect('/');
@@ -247,7 +246,7 @@ app.post('/display', async (req, res) => {
     if (model) {
       try {
         await model.findByIdAndDelete(idToDelete);
-        res.redirect('/'); // Redirect to the main page or another appropriate page
+        res.redirect('/'); 
       } catch (error) {
         console.error('Error deleting record:', error);
         res.status(500).send('Internal Server Error');
@@ -294,12 +293,10 @@ app.post('/update', async (req, res) => {
       const updateFields = {};
       updateFields[columnName] = columnValue;
 
-      // Use findOneAndUpdate to find and update a specific record based on ID
       const updatedRecord = await updateModel.findOneAndUpdate({ _id: updateId }, updateFields, { new: true });
 
       if (updatedRecord) {
         console.log(`Successfully updated record with ID ${updateId} in schema ${updateSchema}`);
-        // Redirect to the display page after update
         res.redirect('/');
       } else {
         console.log(`Record with ID ${updateId} not found in schema ${updateSchema}`);
