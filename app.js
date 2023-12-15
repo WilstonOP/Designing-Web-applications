@@ -53,13 +53,13 @@ RealEstate.deleteMany({})
 */
 
 /*
-  Feedback.find({})
-  .then(data => {
-    console.log(data); 
-  })
-  .catch(error => {
-    console.error(error);
-  });
+Feedback.find({})
+.then(data => {
+  console.log(data); 
+})
+.catch(error => {
+  console.error(error);
+});
 */
 
 /*
@@ -72,6 +72,7 @@ console.log(RealEstate);
     console.error(error);
   });
 */
+
   console.log(AdditionalData);
   AdditionalData.find({})
   .then(data => {
@@ -200,10 +201,6 @@ app.get('/coordinates', (req, res) => {
     });
 });
 
-
-
-/* NEW */
-
 app.post('/display', async (req, res) => {
   const selectedSchema = req.body.schema;
   let model;
@@ -221,7 +218,6 @@ app.post('/display', async (req, res) => {
     default:
       model = null;
   }
-
 
   app.post('/delete', async (req, res) => {
     const selectedSchema = req.body.schema;
